@@ -19,8 +19,12 @@ class asNewRelicEvents
 		// Define New Relic application name
 		if (isset($event['options']['application'])) {
 			$sfAppName = $event['options']['application'];
-			$task->checkAppExists($sfAppName);
-			ProjectConfiguration::getApplicationConfiguration($sfAppName, $event['options']['env'], true);
+			try {
+				$task->checkAppExists($sfAppName);
+				ProjectConfiguration::getApplicationConfiguration($sfAppName, $event['options']['env'], true);
+			} catch (sfException $e) {
+				// TODO : log information
+			}
 		}
 		ini_set('newrelic.appname', sfConfig::get('app_newrelic_appname', sfConfig::get('app_newrelic_appname')));
 
